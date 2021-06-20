@@ -27,11 +27,11 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public int run(MessageReceivedEvent event, String commandRaw) {
-        String[] argv = Utils.divideIntoArgs(commandRaw);
-        if (argv.length == 1) {
+    public int run(MessageReceivedEvent event, String commandArgsRaw) {
+        String[] argv = Utils.divideIntoArgs(commandArgsRaw);
+        if (argv.length == 0) {
             event.getMessage().getChannel().sendMessage(helpMenu).queue();
-        } else if (argv.length > 1) {
+        } else {
             Command commandToHelp = Zeus.commandHashMap.get(argv[0]);
             if (commandToHelp == null) {
                 event.getMessage().getChannel()
@@ -39,6 +39,9 @@ public class HelpCommand implements Command {
                         .queue();
             } else {
                 String helpMessage = commandToHelp.getHelpString();
+                if (helpMessage.trim().equals("")) {
+                    helpMessage = "null";
+                }
                 event.getMessage().getChannel().sendMessage(helpMessage).queue();
             }
         }
@@ -49,5 +52,10 @@ public class HelpCommand implements Command {
     public String getHelpString() {
         return "help - prints general help menu\n" +
                 "help <command> - prints help menu for command";
+    }
+
+    @Override
+    public String getCommandName() {
+        return "help";
     }
 }

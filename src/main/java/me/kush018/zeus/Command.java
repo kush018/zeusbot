@@ -7,8 +7,10 @@ public interface Command {
     int SUCCESS = 0;
     int INVALID_USAGE = -1;
 
-    int run(MessageReceivedEvent event, String commandRaw);
+    int run(MessageReceivedEvent event, String commandArgsRaw);
 
     String getHelpString();
+
+    String getCommandName();
 
 }

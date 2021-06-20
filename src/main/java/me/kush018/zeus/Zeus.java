@@ -2,6 +2,8 @@ package me.kush018.zeus;
 
 import me.kush018.zeus.commands.HelpCommand;
 import me.kush018.zeus.commands.PingCommand;
+import me.kush018.zeus.commands.SpamCommand;
+import me.kush018.zeus.commands.StopCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -24,6 +26,8 @@ public class Zeus extends ListenerAdapter {
         commandHashMap = new HashMap<>();
 
         commandHashMap.put("ping", new PingCommand());
+        commandHashMap.put("spam", new SpamCommand());
+        commandHashMap.put("stop", new StopCommand());
 
         commandHashMap.put("help", new HelpCommand());
 
@@ -56,15 +60,16 @@ public class Zeus extends ListenerAdapter {
         String content = event.getMessage().getContentDisplay();
         if (content.startsWith(BOT_COMMAND_PREFIX)) {
             String commandRaw = content.substring(BOT_COMMAND_PREFIX.length());
-            String[] commandArr = commandRaw.split(" ");
-            String commandName = commandArr[0];
+            String commandName = commandRaw.split(" ")[0];
             Command commandObj = commandHashMap.get(commandName);
             if (commandObj == null) {
                 event.getMessage().getChannel()
                         .sendMessage("Invalid command entered\nEnter " + BOT_COMMAND_PREFIX + "help for a list of valid commands")
                         .queue();
             } else {
-                int executionCode = commandObj.run(event, commandRaw);
+                String commandArgsRaw = commandRaw.substring(commandName.length());
+                commandArgsRaw = commandArgsRaw.trim();
+                int executionCode = commandObj.run(event, commandArgsRaw);
                 if (executionCode == Command.INVALID_USAGE) {
                     event.getMessage().getChannel()
                             .sendMessage("Invalid command usage\nEnter " + BOT_COMMAND_PREFIX + "help " + commandName + " to learn more")

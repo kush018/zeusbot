@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class PingCommand implements Command {
     @Override
-    public int run(MessageReceivedEvent event, String commandRaw) {
+    public int run(MessageReceivedEvent event, String commandArgsRaw) {
         MessageChannel channel = event.getChannel();
         long time = System.currentTimeMillis();
         channel.sendMessage("Pong!")
@@ -19,5 +19,10 @@ public class PingCommand implements Command {
     @Override
     public String getHelpString() {
         return "";
+    }
+
+    @Override
+    public String getCommandName() {
+        return "ping";
     }
 }
